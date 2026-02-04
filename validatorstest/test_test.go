@@ -8,8 +8,8 @@ import (
 	"errors"
 	"testing"
 
-	validators "github.com/luxfi/validators"
 	"github.com/luxfi/ids"
+	validators "github.com/luxfi/validators"
 	"github.com/stretchr/testify/require"
 )
 

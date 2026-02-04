@@ -5,9 +5,9 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/luxfi/version"
 	"github.com/luxfi/ids"
 	"github.com/luxfi/math/set"
+	"github.com/luxfi/version"
 	"github.com/stretchr/testify/require"
 )
 
