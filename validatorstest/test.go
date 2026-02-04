@@ -3,8 +3,8 @@ package validatorstest
 import (
 	"context"
 
-	validators "github.com/luxfi/validators"
 	"github.com/luxfi/ids"
+	validators "github.com/luxfi/validators"
 )
 
 // State is an alias for TestState for backward compatibility
