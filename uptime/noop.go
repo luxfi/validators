@@ -9,10 +9,10 @@ import (
 
 // Calculator calculates uptime
 type Calculator interface {
-	CalculateUptime(nodeID ids.NodeID, subnetID ids.ID) (time.Duration, time.Duration, error)
-	CalculateUptimePercent(nodeID ids.NodeID, subnetID ids.ID) (float64, error)
-	CalculateUptimePercentFrom(nodeID ids.NodeID, subnetID ids.ID, from time.Time) (float64, error)
-	SetCalculator(subnetID ids.ID, calc Calculator) error
+	CalculateUptime(nodeID ids.NodeID, chainID ids.ID) (time.Duration, time.Duration, error)
+	CalculateUptimePercent(nodeID ids.NodeID, chainID ids.ID) (float64, error)
+	CalculateUptimePercentFrom(nodeID ids.NodeID, chainID ids.ID, from time.Time) (float64, error)
+	SetCalculator(chainID ids.ID, calc Calculator) error
 }
 
 // NoOpCalculator is a no-op implementation of Calculator
