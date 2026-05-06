@@ -40,42 +40,42 @@ type lockedCalculator struct {
 	fallback    Calculator
 }
 
-func (l *lockedCalculator) CalculateUptime(nodeID ids.NodeID, subnetID ids.ID) (time.Duration, time.Duration, error) {
+func (l *lockedCalculator) CalculateUptime(nodeID ids.NodeID, chainID ids.ID) (time.Duration, time.Duration, error) {
 	l.mu.RLock()
 	defer l.mu.RUnlock()
 
-	if calc, ok := l.calculators[subnetID]; ok {
-		return calc.CalculateUptime(nodeID, subnetID)
+	if calc, ok := l.calculators[chainID]; ok {
+		return calc.CalculateUptime(nodeID, chainID)
 	}
-	return l.fallback.CalculateUptime(nodeID, subnetID)
+	return l.fallback.CalculateUptime(nodeID, chainID)
 }
 
-func (l *lockedCalculator) CalculateUptimePercent(nodeID ids.NodeID, subnetID ids.ID) (float64, error) {
+func (l *lockedCalculator) CalculateUptimePercent(nodeID ids.NodeID, chainID ids.ID) (float64, error) {
 	l.mu.RLock()
 	defer l.mu.RUnlock()
 
-	if calc, ok := l.calculators[subnetID]; ok {
-		return calc.CalculateUptimePercent(nodeID, subnetID)
+	if calc, ok := l.calculators[chainID]; ok {
+		return calc.CalculateUptimePercent(nodeID, chainID)
 	}
-	return l.fallback.CalculateUptimePercent(nodeID, subnetID)
+	return l.fallback.CalculateUptimePercent(nodeID, chainID)
 }
 
-func (l *lockedCalculator) CalculateUptimePercentFrom(nodeID ids.NodeID, subnetID ids.ID, from time.Time) (float64, error) {
+func (l *lockedCalculator) CalculateUptimePercentFrom(nodeID ids.NodeID, chainID ids.ID, from time.Time) (float64, error) {
 	l.mu.RLock()
 	defer l.mu.RUnlock()
 
-	if calc, ok := l.calculators[subnetID]; ok {
-		return calc.CalculateUptimePercentFrom(nodeID, subnetID, from)
+	if calc, ok := l.calculators[chainID]; ok {
+		return calc.CalculateUptimePercentFrom(nodeID, chainID, from)
 	}
-	return l.fallback.CalculateUptimePercentFrom(nodeID, subnetID, from)
+	return l.fallback.CalculateUptimePercentFrom(nodeID, chainID, from)
 }
 
-func (l *lockedCalculator) SetCalculator(subnetID ids.ID, calc Calculator) error {
+func (l *lockedCalculator) SetCalculator(chainID ids.ID, calc Calculator) error {
 	l.mu.Lock()
 	defer l.mu.Unlock()
 
 	if calc != nil {
-		l.calculators[subnetID] = calc
+		l.calculators[chainID] = calc
 	}
 	return nil
 }
