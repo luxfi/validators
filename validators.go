@@ -43,17 +43,17 @@ type State interface {
 type GetValidatorOutput struct {
 	NodeID         ids.NodeID
 	PublicKey      []byte // BLS public key (classical)
-	RingtailPubKey []byte // Ringtail public key (post-quantum)
+	CoronaPubKey []byte // Corona public key (post-quantum)
 	Light          uint64
 	Weight         uint64 // Alias for Light for backward compatibility
 	TxID           ids.ID // Transaction ID that added this validator
 }
 
-// WarpValidator represents a Warp validator with BLS and Ringtail keys
+// WarpValidator represents a Warp validator with BLS and Corona keys
 type WarpValidator struct {
 	NodeID         ids.NodeID
 	PublicKey      []byte // BLS public key for Warp signing (classical)
-	RingtailPubKey []byte // Ringtail public key (post-quantum)
+	CoronaPubKey []byte // Corona public key (post-quantum)
 	Weight         uint64
 }
 
