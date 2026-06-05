@@ -211,8 +211,8 @@ func (m *manager) Count(netID ids.ID) int {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 
-	if subnet, ok := m.validators[netID]; ok {
-		return len(subnet)
+	if chain, ok := m.validators[netID]; ok {
+		return len(chain)
 	}
 	return 0
 }
@@ -228,8 +228,8 @@ func (m *manager) Sample(netID ids.ID, size int) ([]ids.NodeID, error) {
 	defer m.mu.RUnlock()
 
 	nodeIDs := make([]ids.NodeID, 0, size)
-	if subnet, ok := m.validators[netID]; ok {
-		for nodeID := range subnet {
+	if chain, ok := m.validators[netID]; ok {
+		for nodeID := range chain {
 			if len(nodeIDs) >= size {
 				break
 			}
@@ -244,9 +244,9 @@ func (m *manager) GetValidatorIDs(netID ids.ID) []ids.NodeID {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 
-	if subnet, ok := m.validators[netID]; ok {
-		nodeIDs := make([]ids.NodeID, 0, len(subnet))
-		for nodeID := range subnet {
+	if chain, ok := m.validators[netID]; ok {
+		nodeIDs := make([]ids.NodeID, 0, len(chain))
+		for nodeID := range chain {
 			nodeIDs = append(nodeIDs, nodeID)
 		}
 		return nodeIDs
@@ -260,9 +260,9 @@ func (m *manager) SubsetWeight(netID ids.ID, nodeIDs set.Set[ids.NodeID]) (uint6
 	defer m.mu.RUnlock()
 
 	var totalWeight uint64
-	if subnet, ok := m.validators[netID]; ok {
+	if chain, ok := m.validators[netID]; ok {
 		for nodeID := range nodeIDs {
-			if vdr, ok := subnet[nodeID]; ok {
+			if vdr, ok := chain[nodeID]; ok {
 				totalWeight += vdr.Weight
 			}
 		}
@@ -275,10 +275,10 @@ func (m *manager) GetMap(netID ids.ID) map[ids.NodeID]*GetValidatorOutput {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 
-	if subnet, ok := m.validators[netID]; ok {
+	if chain, ok := m.validators[netID]; ok {
 		// Return a copy
-		result := make(map[ids.NodeID]*GetValidatorOutput, len(subnet))
-		for k, v := range subnet {
+		result := make(map[ids.NodeID]*GetValidatorOutput, len(chain))
+		for k, v := range chain {
 			result[k] = v
 		}
 		return result
