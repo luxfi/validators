@@ -17,9 +17,9 @@ func TestNoOpCalculatorCalculateUptime(t *testing.T) {
 
 	calc := NoOpCalculator{}
 	nodeID := ids.GenerateTestNodeID()
-	subnetID := ids.GenerateTestID()
+	chainID := ids.GenerateTestID()
 
-	uptime, total, err := calc.CalculateUptime(nodeID, subnetID)
+	uptime, total, err := calc.CalculateUptime(nodeID, chainID)
 	require.NoError(err)
 	require.Equal(time.Duration(0), uptime)
 	require.Equal(time.Duration(0), total)
@@ -31,9 +31,9 @@ func TestNoOpCalculatorCalculateUptimePercent(t *testing.T) {
 
 	calc := NoOpCalculator{}
 	nodeID := ids.GenerateTestNodeID()
-	subnetID := ids.GenerateTestID()
+	chainID := ids.GenerateTestID()
 
-	percent, err := calc.CalculateUptimePercent(nodeID, subnetID)
+	percent, err := calc.CalculateUptimePercent(nodeID, chainID)
 	require.NoError(err)
 	require.Equal(1.0, percent) // 100% uptime
 }
@@ -44,10 +44,10 @@ func TestNoOpCalculatorCalculateUptimePercentFrom(t *testing.T) {
 
 	calc := NoOpCalculator{}
 	nodeID := ids.GenerateTestNodeID()
-	subnetID := ids.GenerateTestID()
+	chainID := ids.GenerateTestID()
 	from := time.Now().Add(-time.Hour)
 
-	percent, err := calc.CalculateUptimePercentFrom(nodeID, subnetID, from)
+	percent, err := calc.CalculateUptimePercentFrom(nodeID, chainID, from)
 	require.NoError(err)
 	require.Equal(1.0, percent) // 100% uptime
 }
@@ -57,13 +57,13 @@ func TestNoOpCalculatorSetCalculator(t *testing.T) {
 	require := require.New(t)
 
 	calc := NoOpCalculator{}
-	subnetID := ids.GenerateTestID()
+	chainID := ids.GenerateTestID()
 
 	// Should be a no-op but not error
-	err := calc.SetCalculator(subnetID, NoOpCalculator{})
+	err := calc.SetCalculator(chainID, NoOpCalculator{})
 	require.NoError(err)
 
-	err = calc.SetCalculator(subnetID, nil)
+	err = calc.SetCalculator(chainID, nil)
 	require.NoError(err)
 }
 
@@ -73,9 +73,9 @@ func TestZeroUptimeCalculatorCalculateUptime(t *testing.T) {
 
 	calc := ZeroUptimeCalculator{}
 	nodeID := ids.GenerateTestNodeID()
-	subnetID := ids.GenerateTestID()
+	chainID := ids.GenerateTestID()
 
-	uptime, total, err := calc.CalculateUptime(nodeID, subnetID)
+	uptime, total, err := calc.CalculateUptime(nodeID, chainID)
 	require.NoError(err)
 	require.Equal(time.Duration(0), uptime)
 	require.Equal(time.Duration(1), total) // 0 out of 1
@@ -87,9 +87,9 @@ func TestZeroUptimeCalculatorCalculateUptimePercent(t *testing.T) {
 
 	calc := ZeroUptimeCalculator{}
 	nodeID := ids.GenerateTestNodeID()
-	subnetID := ids.GenerateTestID()
+	chainID := ids.GenerateTestID()
 
-	percent, err := calc.CalculateUptimePercent(nodeID, subnetID)
+	percent, err := calc.CalculateUptimePercent(nodeID, chainID)
 	require.NoError(err)
 	require.Equal(0.0, percent) // 0% uptime
 }
@@ -100,10 +100,10 @@ func TestZeroUptimeCalculatorCalculateUptimePercentFrom(t *testing.T) {
 
 	calc := ZeroUptimeCalculator{}
 	nodeID := ids.GenerateTestNodeID()
-	subnetID := ids.GenerateTestID()
+	chainID := ids.GenerateTestID()
 	from := time.Now().Add(-time.Hour)
 
-	percent, err := calc.CalculateUptimePercentFrom(nodeID, subnetID, from)
+	percent, err := calc.CalculateUptimePercentFrom(nodeID, chainID, from)
 	require.NoError(err)
 	require.Equal(0.0, percent) // 0% uptime
 }
@@ -113,9 +113,9 @@ func TestZeroUptimeCalculatorSetCalculator(t *testing.T) {
 	require := require.New(t)
 
 	calc := ZeroUptimeCalculator{}
-	subnetID := ids.GenerateTestID()
+	chainID := ids.GenerateTestID()
 
-	err := calc.SetCalculator(subnetID, NoOpCalculator{})
+	err := calc.SetCalculator(chainID, NoOpCalculator{})
 	require.NoError(err)
 }
 
@@ -128,9 +128,9 @@ func TestNewLockedCalculator(t *testing.T) {
 
 	// Should have NoOp fallback behavior
 	nodeID := ids.GenerateTestNodeID()
-	subnetID := ids.GenerateTestID()
+	chainID := ids.GenerateTestID()
 
-	percent, err := calc.CalculateUptimePercent(nodeID, subnetID)
+	percent, err := calc.CalculateUptimePercent(nodeID, chainID)
 	require.NoError(err)
 	require.Equal(1.0, percent) // NoOp returns 100%
 }
@@ -144,9 +144,9 @@ func TestNewLockedCalculatorWithFallback(t *testing.T) {
 	require.NotNil(calc)
 
 	nodeID := ids.GenerateTestNodeID()
-	subnetID := ids.GenerateTestID()
+	chainID := ids.GenerateTestID()
 
-	percent, err := calc.CalculateUptimePercent(nodeID, subnetID)
+	percent, err := calc.CalculateUptimePercent(nodeID, chainID)
 	require.NoError(err)
 	require.Equal(0.0, percent) // ZeroUptime returns 0%
 
@@ -154,7 +154,7 @@ func TestNewLockedCalculatorWithFallback(t *testing.T) {
 	calc = NewLockedCalculatorWithFallback(nil)
 	require.NotNil(calc)
 
-	percent, err = calc.CalculateUptimePercent(nodeID, subnetID)
+	percent, err = calc.CalculateUptimePercent(nodeID, chainID)
 	require.NoError(err)
 	require.Equal(1.0, percent) // NoOp returns 100%
 }
@@ -165,26 +165,26 @@ func TestLockedCalculatorCalculateUptime(t *testing.T) {
 
 	calc := NewLockedCalculator()
 	nodeID := ids.GenerateTestNodeID()
-	subnetID := ids.GenerateTestID()
+	chainID := ids.GenerateTestID()
 
 	// Default fallback
-	uptime, total, err := calc.CalculateUptime(nodeID, subnetID)
+	uptime, total, err := calc.CalculateUptime(nodeID, chainID)
 	require.NoError(err)
 	require.Equal(time.Duration(0), uptime)
 	require.Equal(time.Duration(0), total)
 
-	// Set specific calculator for subnet
-	err = calc.SetCalculator(subnetID, ZeroUptimeCalculator{})
+	// Set specific calculator for chain
+	err = calc.SetCalculator(chainID, ZeroUptimeCalculator{})
 	require.NoError(err)
 
-	uptime, total, err = calc.CalculateUptime(nodeID, subnetID)
+	uptime, total, err = calc.CalculateUptime(nodeID, chainID)
 	require.NoError(err)
 	require.Equal(time.Duration(0), uptime)
 	require.Equal(time.Duration(1), total)
 
-	// Other subnet still uses fallback
-	otherSubnetID := ids.GenerateTestID()
-	uptime, total, err = calc.CalculateUptime(nodeID, otherSubnetID)
+	// Other chain still uses fallback
+	otherChainID := ids.GenerateTestID()
+	uptime, total, err = calc.CalculateUptime(nodeID, otherChainID)
 	require.NoError(err)
 	require.Equal(time.Duration(0), uptime)
 	require.Equal(time.Duration(0), total)
@@ -196,18 +196,18 @@ func TestLockedCalculatorCalculateUptimePercent(t *testing.T) {
 
 	calc := NewLockedCalculator()
 	nodeID := ids.GenerateTestNodeID()
-	subnetID := ids.GenerateTestID()
+	chainID := ids.GenerateTestID()
 
 	// Default fallback
-	percent, err := calc.CalculateUptimePercent(nodeID, subnetID)
+	percent, err := calc.CalculateUptimePercent(nodeID, chainID)
 	require.NoError(err)
 	require.Equal(1.0, percent)
 
 	// Set specific calculator
-	err = calc.SetCalculator(subnetID, ZeroUptimeCalculator{})
+	err = calc.SetCalculator(chainID, ZeroUptimeCalculator{})
 	require.NoError(err)
 
-	percent, err = calc.CalculateUptimePercent(nodeID, subnetID)
+	percent, err = calc.CalculateUptimePercent(nodeID, chainID)
 	require.NoError(err)
 	require.Equal(0.0, percent)
 }
@@ -218,19 +218,19 @@ func TestLockedCalculatorCalculateUptimePercentFrom(t *testing.T) {
 
 	calc := NewLockedCalculator()
 	nodeID := ids.GenerateTestNodeID()
-	subnetID := ids.GenerateTestID()
+	chainID := ids.GenerateTestID()
 	from := time.Now().Add(-time.Hour)
 
 	// Default fallback
-	percent, err := calc.CalculateUptimePercentFrom(nodeID, subnetID, from)
+	percent, err := calc.CalculateUptimePercentFrom(nodeID, chainID, from)
 	require.NoError(err)
 	require.Equal(1.0, percent)
 
 	// Set specific calculator
-	err = calc.SetCalculator(subnetID, ZeroUptimeCalculator{})
+	err = calc.SetCalculator(chainID, ZeroUptimeCalculator{})
 	require.NoError(err)
 
-	percent, err = calc.CalculateUptimePercentFrom(nodeID, subnetID, from)
+	percent, err = calc.CalculateUptimePercentFrom(nodeID, chainID, from)
 	require.NoError(err)
 	require.Equal(0.0, percent)
 }
@@ -240,19 +240,19 @@ func TestLockedCalculatorSetCalculator(t *testing.T) {
 	require := require.New(t)
 
 	calc := NewLockedCalculator()
-	subnetID := ids.GenerateTestID()
+	chainID := ids.GenerateTestID()
 
 	// Set calculator
-	err := calc.SetCalculator(subnetID, ZeroUptimeCalculator{})
+	err := calc.SetCalculator(chainID, ZeroUptimeCalculator{})
 	require.NoError(err)
 
 	// Setting nil should not modify (no error)
-	err = calc.SetCalculator(subnetID, nil)
+	err = calc.SetCalculator(chainID, nil)
 	require.NoError(err)
 
 	// Original calculator should still be there
 	nodeID := ids.GenerateTestNodeID()
-	percent, err := calc.CalculateUptimePercent(nodeID, subnetID)
+	percent, err := calc.CalculateUptimePercent(nodeID, chainID)
 	require.NoError(err)
 	require.Equal(0.0, percent) // Still using ZeroUptimeCalculator
 }
@@ -263,7 +263,7 @@ func TestLockedCalculatorConcurrentAccess(t *testing.T) {
 
 	calc := NewLockedCalculator()
 	nodeID := ids.GenerateTestNodeID()
-	subnetID := ids.GenerateTestID()
+	chainID := ids.GenerateTestID()
 
 	done := make(chan bool)
 
@@ -271,9 +271,9 @@ func TestLockedCalculatorConcurrentAccess(t *testing.T) {
 	go func() {
 		for i := 0; i < 100; i++ {
 			if i%2 == 0 {
-				_ = calc.SetCalculator(subnetID, NoOpCalculator{})
+				_ = calc.SetCalculator(chainID, NoOpCalculator{})
 			} else {
-				_ = calc.SetCalculator(subnetID, ZeroUptimeCalculator{})
+				_ = calc.SetCalculator(chainID, ZeroUptimeCalculator{})
 			}
 		}
 		done <- true
@@ -283,9 +283,9 @@ func TestLockedCalculatorConcurrentAccess(t *testing.T) {
 	for i := 0; i < 5; i++ {
 		go func() {
 			for j := 0; j < 100; j++ {
-				_, _ = calc.CalculateUptimePercent(nodeID, subnetID)
-				_, _, _ = calc.CalculateUptime(nodeID, subnetID)
-				_, _ = calc.CalculateUptimePercentFrom(nodeID, subnetID, time.Now())
+				_, _ = calc.CalculateUptimePercent(nodeID, chainID)
+				_, _, _ = calc.CalculateUptime(nodeID, chainID)
+				_, _ = calc.CalculateUptimePercentFrom(nodeID, chainID, time.Now())
 			}
 			done <- true
 		}()
@@ -344,18 +344,18 @@ func TestLockedCalculatorWithCustomCalculator(t *testing.T) {
 	}
 
 	calc := NewLockedCalculator()
-	subnetID := ids.GenerateTestID()
+	chainID := ids.GenerateTestID()
 	nodeID := ids.GenerateTestNodeID()
 
-	err := calc.SetCalculator(subnetID, customCalc)
+	err := calc.SetCalculator(chainID, customCalc)
 	require.NoError(err)
 
-	uptime, total, err := calc.CalculateUptime(nodeID, subnetID)
+	uptime, total, err := calc.CalculateUptime(nodeID, chainID)
 	require.NoError(err)
 	require.Equal(time.Hour, uptime)
 	require.Equal(2*time.Hour, total)
 
-	percent, err := calc.CalculateUptimePercent(nodeID, subnetID)
+	percent, err := calc.CalculateUptimePercent(nodeID, chainID)
 	require.NoError(err)
 	require.Equal(0.5, percent)
 }
