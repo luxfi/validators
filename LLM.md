@@ -1,4 +1,4 @@
-# LLM.md - Hanzo Validators
+# Hanzo Validators
 
 ## Overview
 Go module: github.com/luxfi/validators
