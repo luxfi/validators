@@ -3,10 +3,10 @@ module github.com/luxfi/validators
 go 1.26.4
 
 require (
-	github.com/luxfi/consensus v1.22.58
-	github.com/luxfi/crypto v1.19.0
-	github.com/luxfi/ids v1.2.9
-	github.com/luxfi/math v1.4.0
+	github.com/luxfi/consensus v1.36.2
+	github.com/luxfi/crypto v1.20.2
+	github.com/luxfi/ids v1.3.2
+	github.com/luxfi/math v1.5.1
 	github.com/luxfi/version v1.0.1
 	github.com/stretchr/testify v1.11.1
 	go.uber.org/mock v0.6.0
@@ -17,6 +17,7 @@ require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/luxfi/accel v1.0.7 // indirect
+	github.com/luxfi/geth v1.20.1
 	github.com/luxfi/math/big v0.1.0 // indirect
 	github.com/luxfi/mock v0.1.1 // indirect
 	github.com/luxfi/sampler v1.1.0 // indirect
