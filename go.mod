@@ -3,7 +3,7 @@ module github.com/luxfi/validators
 go 1.26.4
 
 require (
-	github.com/luxfi/consensus v1.36.2
+	github.com/luxfi/consensus v1.36.81
 	github.com/luxfi/crypto v1.20.2
 	github.com/luxfi/ids v1.3.2
 	github.com/luxfi/math v1.5.1
