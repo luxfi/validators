@@ -1,6 +1,6 @@
 module github.com/luxfi/validators
 
-go 1.26.4
+go 1.26.8
 
 require (
 	github.com/luxfi/consensus v1.36.81
